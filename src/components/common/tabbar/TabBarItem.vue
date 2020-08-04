@@ -14,20 +14,12 @@
 
 <script>
 	export default {
-		name: '',
+		name: 'TabBarItem',
 		props: {
 			path: String,
 			activeColor: {
 				type: String,
 				default: 'red'
-			}
-		},
-		components: {
-			
-		},
-		data() {
-			return{
-				
 			}
 		},
 		computed: {
@@ -38,20 +30,11 @@
 				return this.isActive ? {color: this.activeColor} : {}
 			}
 		},
-		watch: {
-			
-		},
-		created() {
-			
-		},
-		mounted() {
-			
-		},
 		methods: {
 			itemClick() {
 				this.$router.push(this.path).catch(() => [])
 			}
-		},
+		}
 	}
 </script>
 

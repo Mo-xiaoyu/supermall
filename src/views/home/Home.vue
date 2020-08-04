@@ -3,6 +3,7 @@
     <nav-bar class="home-nav"> <div slot="center">购物街</div> </nav-bar>
     <home-swiper :banners="banners"/>
     <recommend-view :recommends="recommends" />
+    <feature-view />
 	</div>
 </template>
 
@@ -10,23 +11,21 @@
   import NavBar from 'components/common/navbar/NavBar.vue'
   import HomeSwiper from './childComps/HomeSwiper.vue'
   import RecommendView from './childComps/RecommendView.vue'
+  import FeatureView from './childComps/FeatureView.vue'
   import { getHomeMultidata } from 'network/home.js'
-
 	export default {
 		name: 'Home',
 		components: {
 			NavBar,
       HomeSwiper,
-      RecommendView
+      RecommendView,
+      FeatureView
 		},
 		data() {
 			return{
         banners: [],
         recommends: [],
 			}
-		},
-		watch: {
-
 		},
 		created() {
       //1.请求多个数据
@@ -39,24 +38,23 @@
       }).catch(err => {
         console.log(err);
       })
-		},
-		mounted() {
-
-		},
-		methods: {
-
-		},
+		}
 	}
 </script>
 
 <style scoped>
   #home {
-
+    padding-top: 44px;
   }
 
   .home-nav {
     background-color: var(--color-tint);
     color: #FFFFFF;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9;
   }
 </style>
 

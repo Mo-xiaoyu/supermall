@@ -6,30 +6,7 @@
 
 <script>
 	export default {
-		name: '',
-		props: {
-			
-		},
-		components: {
-			
-		},
-		data() {
-			return{
-				
-			}
-		},
-		watch: {
-			
-		},
-		created() {
-			
-		},
-		mounted() {
-			
-		},
-		methods: {
-			
-		},
+		name: 'TabBar'
 	}
 </script>
 

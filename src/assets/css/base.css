@@ -1,6 +1,5 @@
 @import url("./normalize.css");
 
-
 /* :root -> 获取根元素 html */
 :root {/* 以下是css里定义的变量 */
 	--color-text: #666;

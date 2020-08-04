@@ -13,32 +13,8 @@
 </template>
 
 <script>
-  //import  from ''
   export default {
-    name: 'NavBar',
-    props: {
-
-    },
-    components: {
-
-    },
-    data() {
-      return{
-
-      }
-    },
-    watch: {
-
-    },
-    created() {
-
-    },
-    mounted() {
-
-    },
-    methods: {
-
-    },
+    name: 'NavBar'
   }
 </script>
 
@@ -57,9 +33,5 @@
 
 .center {
   flex: 1;
-}
-
-.right {
-
 }
 </style>
