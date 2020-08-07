@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item">
-    <img :src="goodsItem.show.img">
+    <img :src="goodsItem.show.img" @load="imageLoad">
     <div class="goods-info">
     	<p>{{ goodsItem.title }}</p>
       <span class="price">{{ goodsItem.price }}</span>
@@ -17,6 +17,11 @@
         default() {
           return {}
         }
+      }
+    },
+    methods: {
+      imageLoad() {//监听图片加载完成 vue使用 @load  原生用 img.onload
+        this.$bus.$emit('itemImgLoad')
       }
     }
   }

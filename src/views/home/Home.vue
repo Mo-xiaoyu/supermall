@@ -6,7 +6,7 @@
     <Scroll class="content"
             ref="scroll"
             :probe-type="3"
-            :pull-up-load="true"
+            :pull-upload="true"
             @scroll="contentScroll"
             @pullingUp="loadMore">
       <home-swiper :banners="banners"/>
@@ -29,6 +29,7 @@
   import Scroll from 'components/common/scroll/Scroll.vue'
   import BackTop from 'components/content/backTop/BackTop.vue'
   import { getHomeMultidata, getHomeGoods } from 'network/home.js'
+  import { debounce } from 'common/utils.js'
 
 	export default {
 		name: 'Home',
@@ -68,6 +69,13 @@
       this.getHomeGoods('new');
       this.getHomeGoods('sell');
 		},
+    mounted() {
+      //3.监听item中图片加载完成
+      const refresh = debounce(this.$refs.scroll.refresh, 200)
+      this.$bus.$on('itemImgLoad', () => {
+        refresh();
+      })
+    },
     methods: {
       /**
        * 事件监听相关的方法
@@ -94,9 +102,7 @@
       },
       loadMore() {
         this.getHomeGoods(this.currentType);
-
         this.$refs.scroll.refresh();
-        console.log('上拉加载更多');
       },
       /**
        * 网络请求相关的方法
@@ -116,7 +122,7 @@
         getHomeGoods(type, page).then(res => {
           this.goods[type].list.push(...res.data.list);
           this.goods[type].page += 1;
-
+          //完成上拉加载更多
           this.$refs.scroll.finishPullUp();
         }).catch(err => {
           console.log(err);

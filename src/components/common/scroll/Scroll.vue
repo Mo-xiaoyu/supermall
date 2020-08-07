@@ -38,24 +38,28 @@
           pullUpload: this.pullUpload
         })
         //2.监听滚动位置
-        this.scroll.on('scroll', (pos) => {
-          this.$emit('scroll', pos)
-        })
-        //3.监听上拉事件
-        this.scroll.on('pullingUp', () => {
-          this.$emit('pullingUp')
-        })
+        if (this.probeType === 2 || this.probeType === 3) {
+          this.scroll.on('scroll', (pos) => {
+            this.$emit('scroll', pos)
+          })
+        }
+        //3.监听 Scroll滚动到底部
+        if (this.pullUpload) {
+          this.scroll.on('pullingUp', () => {
+            this.$emit('pullingUp')
+          })
+        }
       })
     },
     methods: {
       backToTop(x, y, time=500) {//(x, y, time)
-        this.scroll.scrollTo(x, y, time)
+        this.scroll && this.scroll.scrollTo(x, y, time)
       },
       finishPullUp() {
-        this.scroll.finishPullUp();
+        this.scroll && this.scroll.finishPullUp();
       },
       refresh() {
-        this.scroll.refresh();
+        this.scroll && this.scroll.refresh();
       }
     },
   }
