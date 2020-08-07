@@ -2,7 +2,7 @@
   <div class="recommend">
     <div v-for="(item, index) in recommends" :key="index" class="recommend-item">
       <a :href="item.link">
-        <img :src="item.image" alt="">
+        <img :src="item.image">
         <div>{{ item.title }}</div>
       </a>
     </div>
@@ -10,7 +10,6 @@
 </template>
 
 <script>
-  //import  from ''
   export default {
     name: '',
     props: {
@@ -20,27 +19,7 @@
           return []
         }
       }
-    },
-    components: {
-
-    },
-    data() {
-      return{
-
-      }
-    },
-    watch: {
-
-    },
-    created() {
-
-    },
-    mounted() {
-
-    },
-    methods: {
-
-    },
+    }
   }
 </script>
 
