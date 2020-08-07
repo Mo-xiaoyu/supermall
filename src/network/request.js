@@ -5,7 +5,7 @@ export function request (config) {
     baseURL: "http://123.207.32.32:8000",
     timeout: 5000
   })
-  
+
   //请求拦截器
   instance.interceptors.request.use(config => {
     return config;
