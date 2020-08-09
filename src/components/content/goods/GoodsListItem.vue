@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="itemClick">
     <img :src="goodsItem.show.img" @load="imageLoad">
     <div class="goods-info">
     	<p>{{ goodsItem.title }}</p>
@@ -22,6 +22,9 @@
     methods: {
       imageLoad() {//监听图片加载完成 vue使用 @load  原生用 img.onload
         this.$bus.$emit('itemImgLoad')
+      },
+      itemClick() {
+        this.$router.push('/detail/'+ this.goodsItem.iid)
       }
     }
   }
