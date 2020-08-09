@@ -4,6 +4,7 @@
       <div slot="center">购物街</div>
     </nav-bar>
     <TabControl ref="tabControl1"
+                class="fixed"
                 :titles="['流行', '新款', '精选']"
                 @tabClick="tabClick" v-show="isTabFixed"/>
     <Scroll class="content"
@@ -165,11 +166,7 @@
   .home-nav {
     background-color: var(--color-tint);
     color: #FFFFFF;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9;
+    font-weight: 700;
   }
 
   .fixed {

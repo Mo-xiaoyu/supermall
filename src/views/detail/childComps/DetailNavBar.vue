@@ -39,7 +39,6 @@
     },
     methods: {
       titleClick(index) {
-        console.log(index);
         this.currentIndex = index;
       },
       backToHome() {
