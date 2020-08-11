@@ -35,7 +35,7 @@
   import Scroll from 'components/common/scroll/Scroll.vue'
   import BackTop from 'components/content/backTop/BackTop.vue'
   import { getHomeMultidata, getHomeGoods } from 'network/home.js'
-  import { debounce } from 'common/utils.js'
+  import { itemListenerMixin } from 'common/mixin.js'
 
 	export default {
 		name: 'Home',
@@ -62,7 +62,8 @@
         isShow: false,
         tabOffsetTop: 0,
         isTabFixed: false,
-        saveY: 0
+        saveY: 0,
+
 			}
 		},
     computed: {
@@ -79,18 +80,18 @@
       this.getHomeGoods('sell');
 		},
     mounted() {
-      //3.监听item中图片加载完成
-      const refresh = debounce(this.$refs.scroll.refresh, 200)
-      this.$bus.$on('itemImgLoad', () => {
-        refresh();
-      })
+      
     },
+    mixins: [itemListenerMixin],
     activated() {
       this.$refs.scroll.backToTop(0, this.saveY, 0)
       this.$refs.scroll.refresh()
     },
     deactivated() {
+      //1.保存 Y 值
       this.saveY = this.$refs.scroll.getScrollY()
+      //2.取消全局事件的监听
+      this.$bus.$off('itemImgLoad', this.itemImgListenr)
     },
     methods: {
       /**

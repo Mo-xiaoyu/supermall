@@ -3,7 +3,7 @@
     <table v-for="(table, index) in paramInfo.sizes"
             :key="index" class="info-size">
     	<tr v-for="(tr,indey) in table" :key="indey">
-    		<td v-for="(td, indey) in tr" :key="indey">{{ td }}</td>
+    		<td v-for="(td, indez) in tr" :key="indez">{{ td }}</td>
     	</tr>
     </table>
     <table class="info-param">
