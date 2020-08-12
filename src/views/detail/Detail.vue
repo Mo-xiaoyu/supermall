@@ -10,6 +10,8 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo"/>
       <goods-list ref="recommend" :goods="recommends" />
     </Scroll>
+    <back-top @click.native="backClick" v-show="isShow"/>
+    <detail-bottom-bar />
   </div>
 </template>
 
@@ -23,8 +25,10 @@
   import DetailParamInfo from './childComps/DetailParamInfo.vue'
   import DetailCommentInfo from './childComps/DetailCommentInfo.vue'
   import GoodsList from 'components/content/goods/GoodsList.vue'
+  import DetailBottomBar from './childComps/DetailBottomBar.vue'
   import { getDetail, getRecommend, Goods, Shop, GoodsParam } from 'network/detail.js'
-  import { itemListenerMixin } from 'common/mixin.js'
+  import { itemListenerMixin, backTopMixin } from 'common/mixin.js'
+  import { BACKTOP_DISTANCE } from 'common/const.js'
   import { debounce } from 'common/utils.js'
 
   export default {
@@ -38,7 +42,8 @@
       DetailGoodsInfo,
       DetailParamInfo,
       DetailCommentInfo,
-      GoodsList
+      GoodsList,
+      DetailBottomBar
     },
     data() {
       return{
@@ -77,7 +82,7 @@
     destroyed() {
       this.$bus.$off('itemImgLoad', this.itemImgListenr)
     },
-    mixins: [itemListenerMixin],
+    mixins: [itemListenerMixin, backTopMixin],
     methods: {
       getDetail() {
         getDetail(this.iid).then(res => {
@@ -137,6 +142,7 @@
             this.$refs.nav.currentIndex = this.curentIndex;
           }
         }
+        this.isShow = (-pos.y) > BACKTOP_DISTANCE;
       }
     },
   }
@@ -157,6 +163,9 @@
   }
 
   .content {
-    height: calc(100% - 44px);
+    /* height: calc(100% - 93px); */
+    position: absolute;
+    top: 44px;
+    bottom: 60px;
   }
 </style>

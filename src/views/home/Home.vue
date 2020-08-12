@@ -33,9 +33,9 @@
   import TabControl from 'components/content/tabControl/TabControl.vue'
   import GoodsList from 'components/content/goods/GoodsList'
   import Scroll from 'components/common/scroll/Scroll.vue'
-  import BackTop from 'components/content/backTop/BackTop.vue'
   import { getHomeMultidata, getHomeGoods } from 'network/home.js'
-  import { itemListenerMixin } from 'common/mixin.js'
+  import { itemListenerMixin, backTopMixin } from 'common/mixin.js'
+  import { BACKTOP_DISTANCE } from 'common/const.js'
 
 	export default {
 		name: 'Home',
@@ -47,7 +47,6 @@
       TabControl,
       GoodsList,
       Scroll,
-      BackTop
 		},
 		data() {
 			return{
@@ -59,11 +58,9 @@
           'sell': {page: 0, list: []}
         },
         currentType: "pop",
-        isShow: false,
         tabOffsetTop: 0,
         isTabFixed: false,
         saveY: 0,
-
 			}
 		},
     computed: {
@@ -80,9 +77,9 @@
       this.getHomeGoods('sell');
 		},
     mounted() {
-      
+
     },
-    mixins: [itemListenerMixin],
+    mixins: [itemListenerMixin, backTopMixin],
     activated() {
       this.$refs.scroll.backToTop(0, this.saveY, 0)
       this.$refs.scroll.refresh()
@@ -112,13 +109,9 @@
         this.$refs.tabControl1.currentIndex = index;
         this.$refs.tabControl2.currentIndex = index;
       },
-      backClick() {
-        this.$refs.scroll.backToTop(0, 0);
-        // this.$refs.scroll.scroll.scrollTo(0, 0, 1000);
-      },
       contentScroll(pos) {
         //1.判断 BackTop 是否显示
-        this.isShow = (-pos.y) > 1000;
+        this.isShow = (-pos.y) > BACKTOP_DISTANCE;
         //2.决定tabControl 是否吸顶(position: fixed)
         this.isTabFixed = (-pos.y) > this.tabOffsetTop;
       },
@@ -154,7 +147,6 @@
           console.log(err);
         })
       },
-
     }
 	}
 </script>
