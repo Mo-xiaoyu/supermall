@@ -69,6 +69,7 @@
         this.themeTopYs.push(this.$refs.params.$el.offsetTop);
         this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
         this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+        this.themeTopYs.push(Number.MAX_VALUE);
       }, 100);
     },
     mounted() {
@@ -131,8 +132,7 @@
         //2.posY和主题中的值进行对比
         let length = this.themeTopYs.length;
         for (let i = 0; i < length; i++) {
-          if (this.curentIndex !== i && ((i < length -1 && posY >= this.themeTopYs[i] && posY < this.themeTopYs[i+1]) || (i == length -1 && posY >= this.themeTopYs[i]))) {
-            console.log(i);
+          if (this.curentIndex !== i && ((posY >= this.themeTopYs[i] && posY < this.themeTopYs[i+1]))) {
             this.curentIndex = i;
             this.$refs.nav.currentIndex = this.curentIndex;
           }
