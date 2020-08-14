@@ -10,8 +10,8 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo"/>
       <goods-list ref="recommend" :goods="recommends" />
     </Scroll>
-    <back-top @click.native="backClick" v-show="isShow"/>
-    <detail-bottom-bar />
+    <back-top @click.native="backClick" v-show="isShow" style="bottom: 60px;"/>
+    <detail-bottom-bar @addCart="addToCart"/>
   </div>
 </template>
 
@@ -143,6 +143,17 @@
           }
         }
         this.isShow = (-pos.y) > BACKTOP_DISTANCE;
+      },
+      addToCart() {
+        //1.获取商品信息
+        const product = {};
+        product.image = this.topImages[0];
+        product.title = this.goods.title;
+        product.desc = this.goods.desc;
+        product.price = this.goods.realPrice;
+        product.iid = this.iid;
+        // this.$store.commit("addCart", product)
+        this.$store.dispatch("addCart", product)
       }
     },
   }
