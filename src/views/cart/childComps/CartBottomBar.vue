@@ -8,7 +8,7 @@
       <div class="center">
         <span class="price">合计:{{ totalPrice }}</span>
       </div>
-      <div class="right">
+      <div class="right" @click="calcClick">
         <span class="calculate">去计算({{ checkLength }})</span>
       </div>
     </div>
@@ -47,6 +47,11 @@
           this.cartList.forEach(item => item.checked = false)
         } else {
           this.cartList.forEach(item => item.checked = true)
+        }
+      },
+      calcClick() {
+        if (!this.checkLength) {
+          this.$toast.show("请选择购买的商品", 2000)
         }
       }
     },
