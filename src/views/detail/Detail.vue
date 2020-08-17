@@ -12,6 +12,7 @@
     </Scroll>
     <back-top @click.native="backClick" v-show="isShow" style="bottom: 60px;"/>
     <detail-bottom-bar @addCart="addToCart"/>
+    <Toast />
   </div>
 </template>
 
@@ -30,6 +31,9 @@
   import { itemListenerMixin, backTopMixin } from 'common/mixin.js'
   import { BACKTOP_DISTANCE } from 'common/const.js'
   import { debounce } from 'common/utils.js'
+  import { mapActions } from 'vuex'
+
+  import Toast from 'components/common/toast/Toast.vue'
 
   export default {
     name: "Detail",
@@ -43,7 +47,8 @@
       DetailParamInfo,
       DetailCommentInfo,
       GoodsList,
-      DetailBottomBar
+      DetailBottomBar,
+      Toast
     },
     data() {
       return{
@@ -57,7 +62,9 @@
         recommends: [],
         themeTopYs: [],
         getThemeTopY: null,
-        curentIndex: 0
+        curentIndex: 0,
+        message: "",
+        show: false
       }
     },
     created() {
@@ -84,6 +91,7 @@
     },
     mixins: [itemListenerMixin, backTopMixin],
     methods: {
+      ...mapActions(['addCart']),
       getDetail() {
         getDetail(this.iid).then(res => {
           //获取结果
@@ -152,8 +160,24 @@
         product.desc = this.goods.desc;
         product.price = this.goods.realPrice;
         product.iid = this.iid;
-        // this.$store.commit("addCart", product)
-        this.$store.dispatch("addCart", product)
+        //2.将商品添加到购物车里(1.Promise 2.mapActions)
+        //映射actions里的方法
+        this.addCart(product).then(res => {
+          // console.log(res);
+          // this.show = true;
+          // this.message = res;
+
+          // setTimeout(() => {
+          //   this.show = false;
+          // },1000)
+          this.$toast.show(res, 2000);
+        })
+       //常规写法
+       /* this.$store.dispatch("addCart", product).then(res => {
+          console.log(res);
+        }).catch(err => {
+
+        }) */
       }
     },
   }
