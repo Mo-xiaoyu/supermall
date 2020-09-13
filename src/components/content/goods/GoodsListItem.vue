@@ -1,6 +1,6 @@
 <template>
-  <div class="goods-item">
-    <img :src="goodsItem.show.img" @load="imageLoad">
+  <div class="goods-item" @click="itemClick">
+    <img v-lazy="showImg" @load="imageLoad">
     <div class="goods-info">
     	<p>{{ goodsItem.title }}</p>
       <span class="price">{{ goodsItem.price }}</span>
@@ -19,9 +19,17 @@
         }
       }
     },
+    computed: {
+      showImg() {
+        return this.goodsItem.image || this.goodsItem.show.img
+      }
+    },
     methods: {
       imageLoad() {//监听图片加载完成 vue使用 @load  原生用 img.onload
         this.$bus.$emit('itemImgLoad')
+      },
+      itemClick() {
+        this.$router.push('/detail/'+ this.goodsItem.iid)
       }
     }
   }

@@ -3,16 +3,22 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <TabControl ref="tabControl1"
+                class="fixed"
+                :titles="['流行', '新款', '精选']"
+                @tabClick="tabClick" v-show="isTabFixed"/>
     <Scroll class="content"
             ref="scroll"
             :probe-type="3"
             :pull-upload="true"
             @scroll="contentScroll"
             @pullingUp="loadMore">
-      <home-swiper :banners="banners"/>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"/>
       <recommend-view :recommends="recommends" />
       <feature-view />
-      <TabControl class="tab-control" :titles="['流行', '新款', '精选']"  @tabClick="tabClick"/>
+      <TabControl ref="tabControl2"
+                  :titles="['流行', '新款', '精选']"
+                  @tabClick="tabClick"/>
       <goods-list :goods="showGoods"/>
     </Scroll>
     <back-top @click.native="backClick" v-show="isShow"/>
@@ -27,9 +33,9 @@
   import TabControl from 'components/content/tabControl/TabControl.vue'
   import GoodsList from 'components/content/goods/GoodsList'
   import Scroll from 'components/common/scroll/Scroll.vue'
-  import BackTop from 'components/content/backTop/BackTop.vue'
   import { getHomeMultidata, getHomeGoods } from 'network/home.js'
-  import { debounce } from 'common/utils.js'
+  import { itemListenerMixin, backTopMixin } from 'common/mixin.js'
+  import { BACKTOP_DISTANCE } from 'common/const.js'
 
 	export default {
 		name: 'Home',
@@ -41,7 +47,6 @@
       TabControl,
       GoodsList,
       Scroll,
-      BackTop
 		},
 		data() {
 			return{
@@ -53,7 +58,9 @@
           'sell': {page: 0, list: []}
         },
         currentType: "pop",
-        isShow: false
+        tabOffsetTop: 0,
+        isTabFixed: false,
+        saveY: 0,
 			}
 		},
     computed: {
@@ -70,11 +77,18 @@
       this.getHomeGoods('sell');
 		},
     mounted() {
-      //3.监听item中图片加载完成
-      const refresh = debounce(this.$refs.scroll.refresh, 200)
-      this.$bus.$on('itemImgLoad', () => {
-        refresh();
-      })
+
+    },
+    mixins: [itemListenerMixin, backTopMixin],
+    activated() {
+      this.$refs.scroll.backToTop(0, this.saveY, 0)
+      this.$refs.scroll.refresh()
+    },
+    deactivated() {
+      //1.保存 Y 值
+      this.saveY = this.$refs.scroll.getScrollY()
+      //2.取消全局事件的监听
+      this.$bus.$off('itemImgLoad', this.itemImgListenr)
     },
     methods: {
       /**
@@ -92,17 +106,22 @@
             this.currentType = "sell"
             break;
         }
-      },
-      backClick() {
-        this.$refs.scroll.backToTop(0, 0);
-        // this.$refs.scroll.scroll.scrollTo(0, 0, 1000);
+        this.$refs.tabControl1.currentIndex = index;
+        this.$refs.tabControl2.currentIndex = index;
       },
       contentScroll(pos) {
-        this.isShow = (-pos.y) > 1000
+        //1.判断 BackTop 是否显示
+        this.isShow = (-pos.y) > BACKTOP_DISTANCE;
+        //2.决定tabControl 是否吸顶(position: fixed)
+        this.isTabFixed = (-pos.y) > this.tabOffsetTop;
       },
       loadMore() {
         this.getHomeGoods(this.currentType);
         this.$refs.scroll.refresh();
+      },
+      swiperImageLoad() {
+        //获取 tabCotrol 的offsetTop
+        this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
       },
       /**
        * 网络请求相关的方法
@@ -128,7 +147,6 @@
           console.log(err);
         })
       },
-
     }
 	}
 </script>
@@ -141,15 +159,13 @@
   .home-nav {
     background-color: var(--color-tint);
     color: #FFFFFF;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9;
+    font-weight: 700;
   }
 
-  .tab-control {
-    position: sticky;
+  .fixed {
+    position: fixed;
+    left: 0;
+    right: 0;
     top: 44px;
   }
 
@@ -167,4 +183,3 @@
     overflow: hidden;
   } */
 </style>
-
